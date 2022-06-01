@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "509162180610",
+    "project_id": "round-office-305316",
+    "storage_bucket": "round-office-305316.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509162180610:android:a88276c5323cebfa2f171b",
+        "android_client_info": {
+          "package_name": "com.awesomeproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509162180610-u7b9l62d9mvnotgmimkcv65jscghrfl1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM-vixZpQDSgqlaQOluskUMUmA6LtcNS0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509162180610-u7b9l62d9mvnotgmimkcv65jscghrfl1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
