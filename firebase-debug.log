@@ -1,0 +1,53 @@
+[debug] [2022-06-07T12:54:42.737Z] ----------------------------------------------------------------------
+[debug] [2022-06-07T12:54:42.739Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\berke\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start --only firestore
+[debug] [2022-06-07T12:54:42.740Z] CLI Version:   11.0.1
+[debug] [2022-06-07T12:54:42.740Z] Platform:      win32
+[debug] [2022-06-07T12:54:42.741Z] Node Version:  v16.15.0
+[debug] [2022-06-07T12:54:42.761Z] Time:          Tue Jun 07 2022 15:54:42 GMT+0300 (GMT+03:00)
+[debug] [2022-06-07T12:54:42.762Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-06-07T12:54:42.775Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] Failed to authenticate, have you run firebase login?
+[warn] !  emulators: You are not currently authenticated so some features may not work correctly. Please run firebase login to authenticate the CLI. 
+[warn] !  Could not find config (firebase.json) so using defaults. 
+[debug] [2022-06-07T12:54:43.122Z] openjdk version "11.0.10" 2021-01-19
+
+[debug] [2022-06-07T12:54:43.123Z] OpenJDK Runtime Environment (build 11.0.10+0-b96-7249189)
+OpenJDK 64-Bit Server VM (build 11.0.10+0-b96-7249189, mixed mode)
+
+[debug] [2022-06-07T12:54:43.170Z] Parsed Java major version: 11
+[info] i  emulators: Starting emulators: firestore {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: firestore"}}
+[warn] !  firestore: Did not find a Cloud Firestore rules file specified in a firebase.json config file. {"metadata":{"emulator":{"name":"firestore"},"message":"Did not find a Cloud Firestore rules file specified in a firebase.json config file."}}
+[warn] !  firestore: The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration. {"metadata":{"emulator":{"name":"firestore"},"message":"The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration."}}
+[debug] [2022-06-07T12:54:43.187Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2022-06-07T12:54:43.188Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2022-06-07T12:54:43.188Z] Starting Firestore Emulator with command {"binary":"java","args":["-Dgoogle.cloud_firestore.debug_log_level=FINE","-Duser.language=en","-jar","C:\\Users\\berke\\.cache\\firebase\\emulators\\cloud-firestore-emulator-v1.14.3.jar","--host","localhost","--port",8080],"optionalArgs":["port","webchannel_port","host","rules","functions_emulator","seed_from_export"],"joinArgs":false} {"metadata":{"emulator":{"name":"firestore"},"message":"Starting Firestore Emulator with command {\"binary\":\"java\",\"args\":[\"-Dgoogle.cloud_firestore.debug_log_level=FINE\",\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\berke\\\\.cache\\\\firebase\\\\emulators\\\\cloud-firestore-emulator-v1.14.3.jar\",\"--host\",\"localhost\",\"--port\",8080],\"optionalArgs\":[\"port\",\"webchannel_port\",\"host\",\"rules\",\"functions_emulator\",\"seed_from_export\"],\"joinArgs\":false}"}}
+[info] i  firestore: Firestore Emulator logging to firestore-debug.log {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator logging to \u001b[1mfirestore-debug.log\u001b[22m"}}
+[debug] [2022-06-07T12:54:45.486Z] Jun 07, 2022 3:54:45 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start
+INFO: Started WebSocket server on ws://localhost:59701
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 07, 2022 3:54:45 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start\r\nINFO: Started WebSocket server on ws://localhost:59701\r\n"}}
+[debug] [2022-06-07T12:54:45.529Z] API endpoint: http://localhost:8080
+ {"metadata":{"emulator":{"name":"firestore"},"message":"API endpoint: http://localhost:8080\n"}}
+[debug] [2022-06-07T12:54:45.530Z] If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:
+
+   export FIRESTORE_EMULATOR_HOST=localhost:8080
+
+Dev App Server is now running.
+
+ {"metadata":{"emulator":{"name":"firestore"},"message":"If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:\r\n\n   export FIRESTORE_EMULATOR_HOST=localhost:8080\n\nDev App Server is now running.\n\r\n"}}
+[warn] !  emulators: The Emulator UI requires a project ID to start. Configure your default project with 'firebase use' or pass the --project flag. {"metadata":{"emulator":{"name":"hub"},"message":"The Emulator UI requires a project ID to start. Configure your default project with 'firebase use' or pass the --project flag."}}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+└─────────────────────────────────────────────────────────────┘
+
+┌───────────┬────────────────┐
+│ Emulator  │ Host:Port      │
+├───────────┼────────────────┤
+│ Firestore │ localhost:8080 │
+└───────────┴────────────────┘
+  Emulator Hub not running.
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 

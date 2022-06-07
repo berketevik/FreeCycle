@@ -6,7 +6,9 @@ import React , { useState, useEffect }from 'react';
 import type {Node} from 'react';
 import Realm from "realm";
 import auth from '@react-native-firebase/auth';
-
+import '@react-native-firebase/app';
+import firestore from '@react-native-firebase/firestore';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import SplashScreen from './views/SplashScreen';
 import Navigator from './Navigator';
@@ -14,74 +16,18 @@ import Navigator from './Navigator';
 import {Component} from 'react/cjs/react.production.min';
 import Login from './views/Login';
 import Signin from './views/Signin';
+import Menu from './views/Menu';
+import Category from './views/Category';
+import ItemDescription from './views/ItemDescription';
 
 const Stack = createStackNavigator();
-
-//Making schema for db
-const ItemSchema = {
-  name: "Item",
-  properties: {
-    _id: "int",
-    name: "string",
-    catagory: "string",
-  },
-  primaryKey: "_id",
-};
-
-(async ()=>{
-  
-  // const realm = await Realm.open({
-  //   path: "myrealm",
-  //   schema: [ItemSchema],
-  // });
-
-
-  // realm.write(() => {
-  //   item1 = realm.create("Item", {
-  //     _id: 1,
-  //     name: "Ikea Table",
-  //     catagory: "Table",
-  //   });
-  //   item2 = realm.create("Item", {
-  //     _id: 2,
-  //     name: "Ikea Closet",
-  //     catagory: "Closet",
-  //   });
-  //   console.log(`created two items: ${item1.name} & ${item2.name}`);
-  // });
-  
-// query realm for all instances of the "Task" type.
-
-
-
-// Deleting Object
-
-// const tasks = realm.objects("Item");
-
-// tasks.map((task) => realm.write(() => {
-
-//   // Delete the task from the realm.
-//   realm.delete(task);
-//   // Discard the reference.
-// }))
-
-
-// console.log(`The lists of tasks are: ${tasks.map((task) => task.name)}`);
-// realm.close()
-
-
-})();
-
-//creating 2 variables
-
-
-
+const Tab = createBottomTabNavigator();
 
 export default function App () {
-
+ 
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(false);
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(false);
 
 
   // Handle user state changes
@@ -97,14 +43,16 @@ export default function App () {
 
   if (initializing) return null;
 
+  //Burayi acinca user login aktif oluyo
+
   if (!user) {
     return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name="Navigator" component={Navigator} />
-          <Stack.Screen name="Splash" component={SplashScreen} />
+          <Stack.Screen name="Signin" component={SplashScreen} />
+          <Stack.Screen name="Splash" component={Signin} />
           <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Signin" component={Signin} />
         </Stack.Navigator>
       </NavigationContainer>
     );
@@ -112,10 +60,13 @@ export default function App () {
 
     return (
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Navigator" component={Navigator} />
-          <Stack.Screen name="Splash" component={SplashScreen} />
-        </Stack.Navigator>
+      {console.log(user)}
+        <Tab.Navigator screenOptions={{headerShown: false}}>
+          <Tab.Screen name="Navigator">{props => <Navigator {...props} user={user}/>}</Tab.Screen>
+          <Tab.Screen name="ItemDescription" component={ItemDescription} />
+          <Tab.Screen name="Menu">{props => <Menu {...props} user={user}/>}</Tab.Screen>
+          <Tab.Screen name="Category" component={Category} />
+        </Tab.Navigator>
       </NavigationContainer>
     );
 }
