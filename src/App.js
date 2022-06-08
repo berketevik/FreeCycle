@@ -19,6 +19,10 @@ import Signin from './views/Signin';
 import Menu from './views/Menu';
 import Category from './views/Category';
 import ItemDescription from './views/ItemDescription';
+import NotificationsPage from './views/NotificationsPage';
+import Donate from './views/Donate';
+import ChatPage from './views/ChatPage';
+import Profile from './views/Profile';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -61,11 +65,15 @@ export default function App () {
     return (
       <NavigationContainer>
       {console.log(user)}
+          <Stack.Screen name="ItemDescription" component={ItemDescription} />
+          <Stack.Screen name="Category" component={Category} />
+          <Stack.Screen name="Notifications" component={NotificationsPage} />
         <Tab.Navigator screenOptions={{headerShown: false}}>
           <Tab.Screen name="Navigator">{props => <Navigator {...props} user={user}/>}</Tab.Screen>
-          <Tab.Screen name="ItemDescription" component={ItemDescription} />
           <Tab.Screen name="Menu">{props => <Menu {...props} user={user}/>}</Tab.Screen>
-          <Tab.Screen name="Category" component={Category} />
+          <Tab.Screen name="Donate" component={Donate} />
+          <Tab.Screen name="Chat" component={ChatPage} />
+          <Tab.Screen name="Profile">{props => <Profile {...props} user={user}/>}</Tab.Screen>
         </Tab.Navigator>
       </NavigationContainer>
     );

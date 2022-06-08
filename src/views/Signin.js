@@ -5,10 +5,12 @@ import {Button, View, TextInput} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Component} from 'react/cjs/react.production.min';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+var name = null;
 var email = null;
 var password = null;
 var password2 = null;
@@ -23,6 +25,12 @@ export default class Signin extends Component {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
+          <TextInput
+            placeholder="Name"
+            onChangeText={n => {
+              name = n;
+            }}
+          />
           <TextInput
             placeholder="Email Adress"
             onChangeText={mail => {
@@ -53,8 +61,15 @@ export default class Signin extends Component {
                     email,
                     password,
                   )
-                  .then(() => {
-                    console.log('User account created & signed in!');
+                  .then((credential) => {
+                    if(credential && credential.user){
+                      firestore().collection('Users').doc(credential.user.uid).set({
+                        Name:name,
+                        email:email
+                      })
+                    }
+
+
                   })
                   .catch(error => {
                     if (error.code === 'auth/email-already-in-use') {

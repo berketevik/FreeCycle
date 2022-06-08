@@ -38,6 +38,22 @@ export default class Navigator extends Component {
         sayfa: 'Esya Sayfasi',
         path: 'ItemDescription',
       },
+      {
+        sayfa: 'Notifications',
+        path: 'Notifications',
+      },
+      {
+        sayfa: 'Donate',
+        path: 'Donate',
+      },
+      {
+        sayfa: 'Chat',
+        path: 'Chat',
+      },
+      {
+        sayfa: 'Profile',
+        path: 'Profile',
+      },
     ],
   };
 
