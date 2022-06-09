@@ -21,6 +21,11 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {TextInput} from 'react-native-gesture-handler';
+import {utils} from '@react-native-firebase/app';
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
+import SelectDropdown from 'react-native-select-dropdown';
 
 const options = {
   title: 'Select Avatar',
@@ -30,65 +35,40 @@ const options = {
     path: 'images',
   },
 };
+
 export default class Donate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filepath: {
-        data: '',
-        uri: '',
-      },
-      fileData: '',
+      categoriesArray: [],
       fileUri: '',
+      selectedItem: '',
+      itemName: '',
+      itemDesc: '',
+      imageName: '',
+      imgURL: '',
     };
+    this.category = firestore()
+      .collection('Categories')
+      .onSnapshot(querySnapshot => {
+        const arr = [];
+
+        querySnapshot.forEach(documentSnapshot => {
+          arr.push(documentSnapshot.id);
+        });
+        this.setState({categoriesArray: arr});
+      });
   }
-
-//   chooseImage = () => {
-//     let options = {
-//       title: 'Select Image',
-//       customButtons: [
-//         {name: 'customOptionKey', title: 'Choose Photo from Custom Option'},
-//       ],
-//       storageOptions: {
-//         skipBackup: true,
-//         path: 'images',
-//       },
-//     };
-//     ImagePicker.showImagePicker(options, response => {
-//       console.log('Response = ', response);
-
-//       if (response.didCancel) {
-//         console.log('User cancelled image picker');
-//       } else if (response.error) {
-//         console.log('ImagePicker Error: ', response.error);
-//       } else if (response.customButton) {
-//         console.log('User tapped custom button: ', response.customButton);
-//         alert(response.customButton);
-//       } else {
-//         const source = {uri: response.uri};
-
-//         // You can also display the image using data:
-//         // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-//         // alert(JSON.stringify(response));s
-//         console.log('response', JSON.stringify(response));
-//         this.setState({
-//           filePath: response,
-//           fileData: response.data,
-//           fileUri: response.uri,
-//         });
-//       }
-//     });
-//   };
 
   launchCamera = () => {
     let options = {
       storageOptions: {
         skipBackup: true,
         path: 'images',
+        selectionLimit: 0,
       },
     };
     launchCamera(options, response => {
-      console.log('Response = ', response);
 
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -98,12 +78,9 @@ export default class Donate extends Component {
         console.log('User tapped custom button: ', response.customButton);
         alert(response.customButton);
       } else {
-        const source = {uri: response.uri};
-        console.log('response', JSON.stringify(response));
         this.setState({
-          filePath: response,
-          fileData: response.data,
-          fileUri: response.uri,
+          fileUri: response.assets[0].uri,
+          itemName: response.assets[0].fileName,
         });
       }
     });
@@ -117,7 +94,7 @@ export default class Donate extends Component {
       },
     };
     launchImageLibrary(options, response => {
-      console.log('Response = ', response);
+      
 
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -127,31 +104,13 @@ export default class Donate extends Component {
         console.log('User tapped custom button: ', response.customButton);
         alert(response.customButton);
       } else {
-        const source = {uri: response.uri};
-        console.log('response', JSON.stringify(response));
         this.setState({
-          filePath: response,
-          fileData: response.data,
-          fileUri: response.uri,
+          fileUri: response.assets[0].uri,
+          itemName: response.assets[0].fileName,
         });
       }
     });
   };
-
-  renderFileData() {
-    if (this.state.fileData) {
-      return (
-        <Image
-          source={{uri: 'data:image/jpeg;base64,' + this.state.fileData}}
-          style={styles.images}
-        />
-      );
-    } else {
-      return (
-        <Image source={require('../../assets/Logo.png')} style={styles.images} />
-      );
-    }
-  }
 
   renderFileUri() {
     if (this.state.fileUri) {
@@ -165,46 +124,117 @@ export default class Donate extends Component {
       );
     }
   }
+
+  uploadImageToStorage(path, imgName) {
+    this.setState({isLoading: true});
+    let reference = storage().ref(imgName);
+    let task = reference.putFile(path);
+    task
+      .then(() => {
+        console.log('Image uploaded to the bucket!');
+        this.setState({
+          isLoading: false,
+          status: 'Image uploaded successfully',
+        });
+      })
+      .catch(e => {
+        console.log('uploading image error => ', e);
+        this.setState({isLoading: false, status: 'Something went wrong'});
+      });
+
+    firestore()
+      .collection(this.state.selectedItem)
+      .add({
+        Name: this.state.imageName,
+        Information: this.state.itemDesc,
+        img: imgName,
+        OwnerID: this.props.user.uid,
+      })
+      .then(() => {
+        console.log('User added!');
+      })
+      .catch(e => {
+        console.log('Database add error => ', e);
+      });
+  }
+
   render() {
     return (
       <Fragment>
-        <StatusBar barStyle="dark-content" />
         <SafeAreaView>
-          <View style={styles.body}>
-            <Text
-              style={{textAlign: 'center', fontSize: 20, paddingBottom: 10}}>
-              Pick Images from Camera & Gallery
-            </Text>
-            <View style={styles.ImageSections}>
-              <View>
-                {this.renderFileData()}
-                <Text style={{textAlign: 'center'}}>Urun Gorseli</Text>
+          <ScrollView>
+            <View style={styles.body}>
+              <View style={styles.ImageSections}>
+                <View>{this.renderFileUri()}</View>
               </View>
-             
+
+              <View style={styles.btnParentSection}>
+                <TouchableOpacity
+                  onPress={this.launchCamera}
+                  style={styles.btnSection}>
+                  <Text style={styles.btnText}>Directly Launch Camera</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={this.launchImageLibrary}
+                  style={styles.btnSection}>
+                  <Text style={styles.btnText}>
+                    Directly Launch Image Library
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{backgroundColor: '#c5c5c5'}}>
+                <Text>Urunun adi</Text>
+                <TextInput
+                  onChangeText={text => {
+                    this.setState({imageName: text});
+                  }}
+                />
+              </View>
+              <View style={{backgroundColor: '#c5c5c5'}}>
+                <Text>Urunun Turu</Text>
+                <SelectDropdown
+                  data={this.state.categoriesArray}
+                  onSelect={selectedItem => {
+                    this.setState({selectedItem: selectedItem});
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    return item;
+                  }}
+                />
+              </View>
+              <View style={{backgroundColor: '#c5c5c5'}}>
+                <Text>Detay Yaz</Text>
+                <TextInput
+                  multiline={true}
+                  onChangeText={text => {
+                    this.setState({itemDesc: text});
+                  }}
+                />
+              </View>
+              <View style={styles.btnParentSection}>
+                <TouchableOpacity
+                  disabled={!this.state.fileUri}
+                  onPress={() => {
+                    this.uploadImageToStorage(
+                      this.state.fileUri,
+                      'gs://' + this.state.itemName,
+                    );
+                    this.props.navigation.navigate('Menu', {title: 'Menu Sayfasi'});
+                  }}
+                  style={styles.btnSection}>
+                  <Text style={styles.btnText}>Submit</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-
-            <View style={styles.btnParentSection}>
-              {/* <TouchableOpacity
-                onPress={this.chooseImage}
-                style={styles.btnSection}>
-                <Text style={styles.btnText}>Choose File</Text>
-              </TouchableOpacity> */}
-
-              <TouchableOpacity
-                onPress={this.launchCamera}
-                style={styles.btnSection}>
-                <Text style={styles.btnText}>Directly Launch Camera</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={this.launchImageLibrary}
-                style={styles.btnSection}>
-                <Text style={styles.btnText}>
-                  Directly Launch Image Library
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          </ScrollView>
         </SafeAreaView>
       </Fragment>
     );

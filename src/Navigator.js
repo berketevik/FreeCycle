@@ -70,6 +70,7 @@ export default class Navigator extends Component {
           <View style={styles.container}>
             {this.props.user === undefined ? this.state.login.map((sayfa, index) => (
               <TouchableOpacity
+              key={index}
                 onPress={() => click(sayfa)}
                 style={styles.item}>
                 <Text style={{textAlign: 'center', fontSize: 20}}>
@@ -80,6 +81,7 @@ export default class Navigator extends Component {
             )) : 
             this.state.sayfalar.map((sayfa, index) => (
                 <TouchableOpacity
+                key={index}
                   onPress={() => click(sayfa)}
                   style={styles.item}>
                   <Text style={{textAlign: 'center', fontSize: 20}}>

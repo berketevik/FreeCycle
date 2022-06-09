@@ -4,7 +4,7 @@ import { Dimensions } from 'react-native';
 import {View,Text} from 'react-native';
 import {Component} from 'react/cjs/react.production.min';
 import firestore from '@react-native-firebase/firestore';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 
 
 
@@ -43,10 +43,10 @@ export default class Menu extends Component {
       return <View><Text>LOADING DATA...</Text></View>;
     }
     return (
-      <View style={{justifyContent:'center',alignItems:'center',height:windowHeight,backgroundColor:'#F6F0E7'}}>
-          <FlatList data={this.state.categoriesArray}
+      <View style={{backgroundColor:'red',height:windowHeight,justifyContent:'center',alignItems:'center',height:windowHeight,backgroundColor:'#F6F0E7'}}>
+          <FlatList contentContainerStyle={{height:windowHeight,justifyContent:'center',alignItems:'center'}} data={this.state.categoriesArray}
           renderItem = {({item})=>(
-            <Text>
+            <Text onPress={()=>{this.props.navigation.navigate("Category",{selectedCategory:item.key})}} style={{borderWidth:1,borderRadius:20,paddingHorizontal:15,paddingVertical:5,marginVertical:5 }}>
               {item.key}
             </Text>
           )}

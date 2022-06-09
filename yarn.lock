@@ -2068,6 +2068,11 @@
   "resolved" "https://registry.npmjs.org/@react-native-firebase/firestore/-/firestore-14.11.0.tgz"
   "version" "14.11.0"
 
+"@react-native-firebase/storage@^14.11.0":
+  "integrity" "sha512-B8emtJEfNzsxBVyCnJ5f26z4OPU5bQefHgc8mrjUjDvhWqWDstcLumevFKBlm8XFWpqQup3re+JRH/TcQPaB9w=="
+  "resolved" "https://registry.npmjs.org/@react-native-firebase/storage/-/storage-14.11.0.tgz"
+  "version" "14.11.0"
+
 "@react-native/assets@1.0.0":
   "integrity" "sha512-KrwSpS1tKI70wuKl68DwJZYEvXktDHdZMG0k2AXD/rJVSlB23/X2CB2cutVR0HwNMJIal9HOUOBB2rVfa6UGtQ=="
   "resolved" "https://registry.npmjs.org/@react-native/assets/-/assets-1.0.0.tgz"
@@ -7333,6 +7338,11 @@
   dependencies:
     "react-freeze" "^1.0.0"
     "warn-once" "^0.1.0"
+
+"react-native-select-dropdown@^2.0.1":
+  "integrity" "sha512-0l4vlwlbQP43OU597x8D+90bh4SiTCYalhRkSBU7dFWkob2YT37Ku9ty1bsIDgJZNSlVfNC8JOJdQX9A2w1i3Q=="
+  "resolved" "https://registry.npmjs.org/react-native-select-dropdown/-/react-native-select-dropdown-2.0.1.tgz"
+  "version" "2.0.1"
 
 "react-native@*", "react-native@>= 0.57.0 < 1", "react-native@>=0.57", "react-native@>=0.60", "react-native@0.68.2":
   "integrity" "sha512-qNMz+mdIirCEmlrhapAtAG+SWVx6MAiSfCbFNhfHqiqu1xw1OKXdzIrjaBEPihRC2pcORCoCHduHGQe/Pz9Yuw=="
