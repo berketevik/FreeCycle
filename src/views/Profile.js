@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import { Dimensions } from 'react-native';
-import {View,Text} from 'react-native';
+import {View,Text,Image} from 'react-native';
 import {Component} from 'react/cjs/react.production.min';
 import firestore from '@react-native-firebase/firestore';
 import { FlatList } from 'react-native-gesture-handler';
@@ -37,14 +37,42 @@ export default class Profile extends Component {
       return <View><Text>LOADING DATA...</Text></View>;
     }
     return (
-      <View style={{justifyContent:'center',alignItems:'center',height:windowHeight,backgroundColor:'#F6F0E7'}}>
-          <View style={{justifyContent:'center',alignItems:'center'}}> 
-          <Text> {this.state.user.Name}</Text>
-          <Text> {this.state.user.email}</Text>
-          <Text> {this.state.user.id}</Text>
-          </View>
+      <View
+       style={{ flex: 1, justifyContent: "center", alignItems: "center",backgroundColor:"#F6F0E7"}}>
+         
+         <View
+       style={{ flex: 3, justifyContent: "center", alignItems: "center",backgroundColor:"pink"}}>
+          <View
+      style={{ flex: 1, justifyContent:  "center", alignItems: "flex-start",alignContent:"flex-end",width:windowWidth}}>
+         <Image
+          source={require('../../assets/Logo.png')}
+          style={{ width: windowHeight*8/100,
+            height: windowHeight*8/100,
+
+            marginHorizontal: 3}}
+        />
+            
+     </View>
+     <View
+      style={{ flex: 4, justifyContent: "center", alignItems: "center",backgroundColor:"yellow"}}>
+         <Image
+          source={require('../../assets/Logo.png')}
+          style={{ width: 150,
+            height: 150,
+
+            marginHorizontal: 3}}
+        />
+     </View>
 
       </View>
+      <View
+      style={{ flex: 2, justifyContent: "center", alignItems: "center"}}>
+        
+     </View>
+      </View>
+      
+     
+      
     );
   }
 }
