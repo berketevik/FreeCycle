@@ -6,6 +6,8 @@ import {Component} from 'react/cjs/react.production.min';
 import firestore from '@react-native-firebase/firestore';
 import { FlatList } from 'react-native-gesture-handler';
 import storage from '@react-native-firebase/storage';
+import {SafeAreaView} from 'react-native-safe-area-context';
+
 
 
 
@@ -64,19 +66,37 @@ export default class Category extends Component {
       return <View><Text>LOADING DATA...</Text></View>;
     }
     return (
-      <View style={{justifyContent:'center',alignItems:'center',height:windowHeight,backgroundColor:'#F6F0E7'}}>
-          
-          <FlatList data={this.state.categoriesArray}
+      <SafeAreaView style={{justifyContent:'center',alignItems:'center',height:windowHeight,backgroundColor:'#F6F0E7'}}>
+          <Image
+              source={require('../../assets/Logo.png')}
+              style={{
+                width: (windowHeight * 6) / 100,
+                height: (windowHeight * 6) / 100,
+                marginHorizontal: 3,
+                justifyContent:"flex-start",
+                alignSelf:"",
+                
+              }}
+            />
+          <FlatList
+          columnWrapperStyle={{justifyContent:"space-around"}}
+          numColumns={2}
+           data={this.state.categoriesArray}
+          style={{paddingTop:windowHeight*0.04}}
           renderItem = {({item})=>(
-            <View>
+            <View
+            style={{paddingTop:windowHeight*0.02,paddingLeft:windowWidth*0.03}}
+            >
               {this.renderFileUri()}
-            <Text>
-              {item.iName}
+            <Text
+            style={{justifyContent:"flex-end",alignSelf:"center",backgroundColor:"#314951",width:150,textAlign:"center",height:windowHeight*0.03,paddingTop:windowHeight*0.005}}
+            >
+              {this.state.categoriesArray.Name}
             </Text>
             </View>
           )}
           />
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -89,6 +109,8 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     marginHorizontal: 3,
+    borderTopLeftRadius:15,
+    borderTopRightRadius:15
   },
   
 });
