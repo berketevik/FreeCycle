@@ -24,6 +24,7 @@ import Donate from './views/Donate';
 import ChatPage from './views/ChatPage';
 import Profile from './views/Profile';
 import Chat from './views/Chat';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -46,14 +47,13 @@ export default function App() {
 
   if (initializing) return null;
 
-
   if (!user) {
     return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name="Navigator" component={Navigator} />
-          <Stack.Screen name="Signin" component={SplashScreen} />
           <Stack.Screen name="Splash" component={Signin} />
+          <Stack.Screen name="Signin" component={SplashScreen} />
           <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
       </NavigationContainer>
@@ -82,7 +82,6 @@ export default function App() {
   }
   return (
     <NavigationContainer>
-      {console.log(user)}
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="Tab" component={Tabs} />
         <Stack.Screen name="ItemDescription" component={ItemDescription} />

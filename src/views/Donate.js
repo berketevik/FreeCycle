@@ -26,6 +26,8 @@ import {utils} from '@react-native-firebase/app';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import SelectDropdown from 'react-native-select-dropdown';
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const options = {
   title: 'Select Avatar',
@@ -183,17 +185,25 @@ export default class Donate extends Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={{backgroundColor: '#c5c5c5'}}>
-                <Text>Urunun adi</Text>
+              <View style={{width:windowWidth,height:windowHeight*0.04,marginVertical:windowHeight*0.01,flexDirection:"row",textAlign:"center"}}>
+                <Text
+                style={{width:windowWidth*0.30,fontSize:windowHeight*0.015,marginLeft:windowWidth*0.05,backgroundColor:"#D1C8BA",height:windowHeight*0.04,paddingTop:windowHeight*0.01,paddingLeft:windowWidth*0.02}}
+                >PRODUCT NAME:</Text>
                 <TextInput
+                style={{width:windowWidth*0.6,backgroundColor:"#D1C8BA",fontSize:windowHeight*0.015,height:windowHeight*0.04,marginRight:windowWidth*0.05,marginLeft:windowWidth*0.02,paddingLeft:windowWidth*0.02}}
                   onChangeText={text => {
                     this.setState({imageName: text});
                   }}
                 />
               </View>
-              <View style={{backgroundColor: '#c5c5c5'}}>
-                <Text>Urunun Turu</Text>
+              <View style={{width:windowWidth,height:windowHeight*0.04,marginVertical:windowHeight*0.01,flexDirection:"row",textAlign:"center"}}>
+                <Text
+                 style={{width:windowWidth*0.25,fontSize:windowHeight*0.015,marginLeft:windowWidth*0.05,backgroundColor:"#D1C8BA",height:windowHeight*0.04,paddingTop:windowHeight*0.01,paddingLeft:windowWidth*0.02}}
+                >CATEGORIES:</Text>
                 <SelectDropdown
+                defaultButtonText='SELECT A CATEGORY'
+                buttonStyle={{width:windowWidth*0.6,backgroundColor:"#D1C8BA",height:windowHeight*0.04,marginRight:windowWidth*0.05}}
+                buttonTextStyle={{fontSize:windowHeight*0.015}}
                   data={this.state.categoriesArray}
                   onSelect={selectedItem => {
                     this.setState({selectedItem: selectedItem});
@@ -210,9 +220,12 @@ export default class Donate extends Component {
                   }}
                 />
               </View>
-              <View style={{backgroundColor: '#c5c5c5'}}>
-                <Text>Detay Yaz</Text>
+              <View style={{width:windowWidth,height:windowHeight*0.04,marginVertical:windowHeight*0.01,flexDirection:"row",textAlign:"center"}}>
+                <Text 
+                 style={{borderRadius:5,width:windowWidth*0.17,fontSize:windowHeight*0.015,marginLeft:windowWidth*0.05,backgroundColor:"#D1C8BA",height:windowHeight*0.04,paddingTop:windowHeight*0.01,paddingLeft:windowWidth*0.02}}
+                >DETAILS:</Text>
                 <TextInput
+                 style={{width:windowWidth*0.73,backgroundColor:"#D1C8BA",fontSize:windowHeight*0.015,height:windowHeight*0.04,marginRight:windowWidth*0.05,paddingTop:windowHeight*0.01,marginLeft:windowWidth*0.02,paddingLeft:windowWidth*0.02}}
                   multiline={true}
                   onChangeText={text => {
                     this.setState({itemDesc: text});
@@ -247,7 +260,7 @@ const styles = StyleSheet.create({
   },
 
   body: {
-    backgroundColor: Colors.white,
+    backgroundColor:"#F6F0E7",
     justifyContent: 'center',
     borderColor: 'black',
     borderWidth: 1,
@@ -275,16 +288,16 @@ const styles = StyleSheet.create({
   btnSection: {
     width: 225,
     height: 50,
-    backgroundColor: '#DCDCDC',
+    backgroundColor: '#D1C8BA',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 3,
+    borderRadius: 30,
     marginBottom: 10,
   },
   btnText: {
     textAlign: 'center',
     color: 'gray',
-    fontSize: 14,
+    fontSize: windowHeight*0.017,
     fontWeight: 'bold',
   },
 });
