@@ -23,6 +23,7 @@ import NotificationsPage from './views/NotificationsPage';
 import Donate from './views/Donate';
 import ChatPage from './views/ChatPage';
 import Profile from './views/Profile';
+import Chat from './views/Chat';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -45,7 +46,6 @@ export default function App() {
 
   if (initializing) return null;
 
-  //Burayi acinca user login aktif oluyo
 
   if (!user) {
     return (
@@ -71,7 +71,9 @@ export default function App() {
         <Tab.Screen name="Donate">
           {props => <Donate {...props} user={user} />}
         </Tab.Screen>
-        <Tab.Screen name="Chat" component={ChatPage} />
+        <Tab.Screen name="ChatPage">
+          {props => <ChatPage {...props} user={user} />}
+        </Tab.Screen>
         <Tab.Screen name="Profile">
           {props => <Profile {...props} user={user} />}
         </Tab.Screen>
@@ -86,6 +88,7 @@ export default function App() {
         <Stack.Screen name="ItemDescription" component={ItemDescription} />
         <Stack.Screen name="Category" component={Category} />
         <Stack.Screen name="Notifications" component={NotificationsPage} />
+        <Stack.Screen name="Chat" component={Chat} />
       </Stack.Navigator>
     </NavigationContainer>
   );

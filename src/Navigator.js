@@ -47,8 +47,8 @@ export default class Navigator extends Component {
         path: 'Donate',
       },
       {
-        sayfa: 'Chat',
-        path: 'Chat',
+        sayfa: 'ChatPage',
+        path: 'ChatPage',
       },
       {
         sayfa: 'Profile',
