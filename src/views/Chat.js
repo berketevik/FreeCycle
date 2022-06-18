@@ -16,7 +16,7 @@ import firestore from '@react-native-firebase/firestore';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-var loading = true;
+var loading = false;
 
 export const sendChatMessage = (chatID, chat) => {
   return firestore()
@@ -29,7 +29,6 @@ export const sendChatMessage = (chatID, chat) => {
 const Chat = ({navigation, route}) => {
   const [messages, setMessages] = useState();
   const {uid, email, chatId} = route.params;
-    console.log(uid)
   useEffect(() => {
     firestore()
       .collection('messages')
@@ -37,29 +36,16 @@ const Chat = ({navigation, route}) => {
       .collection('chats')
       .orderBy('createdAt', 'desc')
       .onSnapshot(function (doc) {
-        var tempArr = []
+        var tempArr = [];
         for (const message in doc.docs) {
-            if (Object.hasOwnProperty.call(doc.docs, message)) {
-                const element = doc.docs[message];
-                tempArr.push(element)
-            }
+          if (Object.hasOwnProperty.call(doc.docs, message)) {
+            const element = doc.docs[message];
+            tempArr.push(element.data());
+          }
         }
-        console.log(tempArr)
+        setMessages(tempArr);
+        loading = false;
       });
-
-    // setMessages([
-    //   {
-    //     _id: 1,
-    //     text: 'Hello developer',
-    //     createdAt: new Date(),
-    //     user: {
-    //       _id: 2,
-    //       name: 'React Native',
-    //       // avatar: 'https://placeimg.com/140/140/any',
-    //     },
-    //   },
-    // ]);
-
   }, []);
   const onSend = useCallback((msg = []) => {
     setMessages(previousMessages => GiftedChat.append(previousMessages, msg));
@@ -67,18 +53,23 @@ const Chat = ({navigation, route}) => {
     sendChatMessage(chatId, {_id, createdAt, text, user});
   }, []);
 
-  return (
-    <GiftedChat
-      messages={messages}
-      showAvatarForEveryMessage={true}
-      onSend={msg => onSend(msg)}
-      user={{
-        _id: uid,
-        name: email,
-        // avatar: auth?.currentUser?.photoURL,
-      }}
-    />
-  );
+  if (loading) {
+    return <ActivityIndicator size={'large'} />;
+  }
+  else {return (
+    <>
+      <GiftedChat
+        messages={messages}
+        showAvatarForEveryMessage={true}
+        onSend={msg => onSend(msg)}
+        user={{
+          _id: uid,
+          name: email,
+          // avatar: auth?.currentUser?.photoURL,
+        }}
+      />
+    </>
+  );}
 };
 
 export default Chat;

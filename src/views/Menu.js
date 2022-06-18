@@ -100,6 +100,8 @@ export default class Menu extends Component {
               onPress={() => {
                 this.props.navigation.navigate('Category', {
                   selectedCategory: item.key,
+                  userId:this.props.user.uid,
+                  userEmail:this.props.user.email,
                 });
               }}
               style={{

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {Button, Dimensions} from 'react-native';
+import {ActivityIndicator, Button, Dimensions} from 'react-native';
 import {View, Text} from 'react-native';
 import {Component} from 'react/cjs/react.production.min';
 import firestore from '@react-native-firebase/firestore';
@@ -15,43 +15,57 @@ const Logo = require('../../assets/Logo.png');
 var loading = true;
 var targetId = 'RxUgkAnTtgfjVWXu1sakIRwop9b2';
 
+function chatID(targetID, userId) {
+  const chatterID = userId;
+  const chateeID = targetID;
+  const chatIDpre = [];
+  chatIDpre.push(chatterID);
+  chatIDpre.push(chateeID);
+  chatIDpre.sort();
+  return chatIDpre.join('_');
+}
+
 export default class ChatPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {categoriesArray: []};
+    this.state = {usersArray: []};
+
     this.category = firestore()
-      .collection(selectedCollection)
+      .collection('Users')
       .onSnapshot(querySnapshot => {
         const arr = [];
 
         querySnapshot.forEach(documentSnapshot => {
-          arr.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
+          var x = chatID(documentSnapshot.id, this.props.user.uid);
+
+          firestore()
+            .collection('messages')
+            .doc(x)
+            .collection('chats').get().then(function(querySnapshot){
+              if(!querySnapshot.empty){
+
+                arr.push({
+                        ...documentSnapshot.data(),
+                        id: documentSnapshot.id,
+                      });
+
+              }
+              loading = false
+            })
+            
+            
         });
-        console.log(arr);
-        this.setState({categoriesArray: arr});
+        this.setState({usersArray: arr});
       });
     loading = false;
   }
-
-  chatID = (targetID) => {
-    const chatterID = this.props.user.uid;
-    const chateeID = targetID;
-    const chatIDpre = [];
-    chatIDpre.push(chatterID);
-    chatIDpre.push(chateeID);
-    chatIDpre.sort();
-    return chatIDpre.join('_');
-  };
-
+  componentDidMount(){
+    
+  }
   render() {
     if (loading) {
       return (
-        <View>
-          <Text>LOADING DATA...</Text>
-        </View>
+        <ActivityIndicator size={'large'}/>
       );
     }
     return (
@@ -62,12 +76,27 @@ export default class ChatPage extends Component {
           height: windowHeight,
           backgroundColor: '#F6F0E7',
         }}>
-        <Button
-          title="Press HERE"
-          onPress={() => {
-            const chatId  = this.chatID(targetId)
-            this.props.navigation.navigate('Chat',{'uid':this.props.user.uid,'email':this.props.user.email,'chatId':chatId});
+        <FlatList
+          contentContainerStyle={{
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
+          data={this.state.usersArray}
+          renderItem={({item}) => (
+            <View>
+              <Button
+                title={item.Name}
+                onPress={() => {
+                  const chatId = chatID(item.id, this.props.user.uid);
+                  this.props.navigation.navigate('Chat', {
+                    uid: this.props.user.uid,
+                    email: this.props.user.email,
+                    chatId: chatId,
+                  });
+                }}
+              />
+            </View>
+          )}
         />
       </View>
     );
