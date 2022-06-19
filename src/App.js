@@ -14,6 +14,9 @@ import SplashScreen from './views/SplashScreen';
 import Navigator from './Navigator';
 
 import {Component} from 'react/cjs/react.production.min';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+
 import Login from './views/Login';
 import Signin from './views/Signin';
 import Menu from './views/Menu';
@@ -25,6 +28,8 @@ import ChatPage from './views/ChatPage';
 import Profile from './views/Profile';
 import Chat from './views/Chat';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import MyProducts from './views/MyProducts';
+import Verify from './views/Verify';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -62,10 +67,14 @@ export default function App() {
   function Tabs() {
     return (
       <Tab.Navigator screenOptions={{headerShown: false}}>
-        <Tab.Screen name="Navigator">
+        <Tab.Screen
+          options={{
+            tabBarLabel: 'Home',
+          }}
+          name="Navigator">
           {props => <Navigator {...props} user={user} />}
         </Tab.Screen>
-        <Tab.Screen name="Menu">
+        <Tab.Screen name="Menu" tabBar>
           {props => <Menu {...props} user={user} />}
         </Tab.Screen>
         <Tab.Screen name="Donate">
@@ -84,10 +93,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="Tab" component={Tabs} />
+        <Stack.Screen name="Verify" component={Verify} />
         <Stack.Screen name="ItemDescription" component={ItemDescription} />
         <Stack.Screen name="Category" component={Category} />
         <Stack.Screen name="Notifications" component={NotificationsPage} />
         <Stack.Screen name="Chat" component={Chat} />
+        <Stack.Screen name="MyProducts" component={MyProducts} />
       </Stack.Navigator>
     </NavigationContainer>
   );

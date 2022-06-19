@@ -40,7 +40,7 @@ const Chat = ({navigation, route}) => {
         for (const message in doc.docs) {
           if (Object.hasOwnProperty.call(doc.docs, message)) {
             const element = doc.docs[message];
-            tempArr.push(element.data());
+            tempArr.push({...element.data(),createdAt:element.data().createdAt.toDate()});
           }
         }
         setMessages(tempArr);

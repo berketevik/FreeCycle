@@ -54,6 +54,14 @@ export default class Navigator extends Component {
         sayfa: 'Profile',
         path: 'Profile',
       },
+      {
+        sayfa: 'My Products',
+        path: 'MyProducts',
+      },
+      {
+        sayfa: 'Verify',
+        path: 'Verify',
+      },
     ],
   };
 

@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import {Dimensions} from 'react-native';
-import {View, Text, Image,StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import {Component} from 'react/cjs/react.production.min';
 import firestore from '@react-native-firebase/firestore';
 import {FlatList, TouchableHighlight} from 'react-native-gesture-handler';
@@ -38,7 +38,6 @@ export default class Profile extends Component {
       );
     }
     return (
-      
       <SafeAreaView
         style={{
           flex: 1,
@@ -74,75 +73,66 @@ export default class Profile extends Component {
             style={{
               flex: 3,
               alignItems: 'center',
-              justifyContent:"center",
+              justifyContent: 'center',
             }}>
-              <Text
-              style={styles.styleTxt}
-              >
-              {this.state.user.Name}
-              </Text>
-              <Text
-              style={styles.styleTxt}
-              >
-              {this.state.user.email}
-              </Text>
-              <Text
-              style={styles.styleTxt}
-              >
-              {this.state.user.id}
-              </Text>
-              <Text
-              style={styles.styleTxt}
-              >
+            <Text style={styles.styleTxt}>{this.state.user.Name}</Text>
+            <Text style={styles.styleTxt}>{this.state.user.email}</Text>
+            <Text style={styles.styleTxt}>{this.state.user.id}</Text>
+            <Text
+              onPress={() => {
+                this.props.navigation.navigate('MyProducts', {
+                  userId:this.props.user.uid
+                });
+              }}
+              style={styles.styleTxt}>
               MY PRODUCTS
-              </Text>
-          
+            </Text>
           </View>
         </View>
         <View
           style={{
             flex: 9,
-            justifyContent: "flex-end",
+            justifyContent: 'flex-end',
             alignItems: 'center',
-           
           }}>
-            <Text
-            style={{ opacity:0.54,
-              fontSize:windowHeight*0.013,paddingBottom:windowHeight*0.02}}
-            >Please Verify Your Student ID</Text>
-          </View>
-          <TouchableHighlight
-          style={{backgroundColor:"#D1C8BA",width:windowWidth*0.2,justifyContent:"center",height:windowHeight*0.04,borderRadius:10
-      }}
-          >
-            <Text
-            style={{fontSize:windowHeight*0.023,textAlign:"center"}}
-            >
-
-              Verify
-            </Text>
-          </TouchableHighlight>
+          <Text
+            style={{
+              opacity: 0.54,
+              fontSize: windowHeight * 0.013,
+              paddingBottom: windowHeight * 0.02,
+            }}>
+            Please Verify Your Student ID
+          </Text>
+        </View>
+        <TouchableHighlight
+          style={{
+            backgroundColor: '#D1C8BA',
+            width: windowWidth * 0.2,
+            justifyContent: 'center',
+            height: windowHeight * 0.04,
+            borderRadius: 10,
+          }}>
+          <Text onPress={()=>{
+            this.props.navigation.navigate('Verify',{userId:this.props.user.uid})
+          }} style={{fontSize: windowHeight * 0.023, textAlign: 'center'}}>
+            Verify
+          </Text>
+        </TouchableHighlight>
       </SafeAreaView>
-    
     );
   }
 }
 
 const styles = StyleSheet.create({
   styleTxt: {
-    fontSize: windowHeight*0.017,
+    fontSize: windowHeight * 0.017,
     fontWeight: 'bold',
-    backgroundColor:"#D1C8BA",
-    color:"#000000",
-    width:windowWidth*0.8,
-    height:windowHeight*0.04,
-    textAlign:"center",
-    paddingTop:windowHeight*0.01,
-    marginTop:windowHeight*0.02
-
-  
+    backgroundColor: '#D1C8BA',
+    color: '#000000',
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.04,
+    textAlign: 'center',
+    paddingTop: windowHeight * 0.01,
+    marginTop: windowHeight * 0.02,
   },
 });
-
-
-

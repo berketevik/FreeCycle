@@ -13,11 +13,12 @@ const windowHeight = Dimensions.get('window').height;
 
 const Logo = require('../../assets/Logo.png');
 var loading = true;
-var imageLoading = true;
 export default class Category extends Component {
   constructor(props) {
     super(props);
-    this.state = {categoriesArray: [], imageHolder: ''};
+    this.state = {categoriesArray: [], imageHolder: '', urlArray: []};
+  }
+  componentDidMount() {
     this.category = firestore()
       .collection(this.props.route.params.selectedCategory)
       .onSnapshot(querySnapshot => {
@@ -28,29 +29,26 @@ export default class Category extends Component {
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
           });
+          const func = async () => {
+            const ref = storage().ref(documentSnapshot.data().img);
+            await ref.getDownloadURL().then(x => {
+              var joined = this.state.urlArray.concat([x]);
+              this.setState({urlArray: joined});
+            });
+          };
+          func();
         });
         this.setState({categoriesArray: arr});
       });
     loading = false;
   }
-  async getUrl(img) {
-    const url = await storage().ref(img).getDownloadURL;
-    this.setState({imageHolder: url});
-    imageLoading = false;
-  }
 
-  renderFileUri() {
-    if (this.state.imageHolder) {
-      return (
-        <Image source={{uri: this.state.imageHolder}} style={styles.images} />
-      );
-    } else {
-      return (
-        <Image
-          source={require('../../assets/Logo.png')}
-          style={styles.images}
-        />
-      );
+  handleImage(item) {
+    for (let i = 0; i < this.state.urlArray.length; i++) {
+      if (this.state.urlArray[i].includes(item.substr(5))) {
+        console.log(this.state.urlArray[i])
+        return this.state.urlArray[i];
+      }
     }
   }
 
@@ -84,24 +82,33 @@ export default class Category extends Component {
           columnWrapperStyle={{justifyContent: 'space-around'}}
           numColumns={2}
           data={this.state.categoriesArray}
-          style={{paddingTop: windowHeight * 0.04}}
-          renderItem={({item}) => (
+          style={{paddingTop: windowHeight * 0.04, height: windowHeight}}
+          renderItem={({item, index}) => (
             <TouchableHighlight
-                onPress={() => {
-                  this.props.navigation.navigate('ItemDescription', {
-                    selectedItem: item.key,
-                    selectedCollection: this.props.route.params.selectedCategory,
-                    userId: this.props.route.params.userId,
-                    userEmail: this.props.route.params.userEmail,
-                    });
-
+              onPress={() => {
+                this.props.navigation.navigate('ItemDescription', {
+                  selectedItem: item.key,
+                  selectedCollection: this.props.route.params.selectedCategory,
+                  userId: this.props.route.params.userId,
+                  userEmail: this.props.route.params.userEmail,
+                });
+              }}>
+              <View
+                style={{
+                  paddingTop: windowHeight * 0.02,
+                  paddingLeft: windowWidth * 0.03,
                 }}>
-                    <View
-                      style={{
-                        paddingTop: windowHeight * 0.02,
-                        paddingLeft: windowWidth * 0.03,
-                      }}>
-                {this.renderFileUri()}
+
+                {item.img ===undefined ? (
+                  <Image source={Logo} />
+                ) : (
+                  <Image
+                    style={{width: 150, height: 75}}
+                    source={{
+                      uri: this.handleImage(item.img),
+                    }}
+                  />
+                )}
                 <Text
                   style={{
                     color: '#ffffff',
@@ -115,8 +122,8 @@ export default class Category extends Component {
                   }}>
                   {item.Name}
                 </Text>
-            </View>
-              </TouchableHighlight>
+              </View>
+            </TouchableHighlight>
           )}
         />
       </SafeAreaView>

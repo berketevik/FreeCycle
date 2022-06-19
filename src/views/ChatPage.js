@@ -29,6 +29,9 @@ export default class ChatPage extends Component {
   constructor(props) {
     super(props);
     this.state = {usersArray: []};
+  }
+
+  componentDidMount(){
 
     this.category = firestore()
       .collection('Users')
@@ -50,22 +53,24 @@ export default class ChatPage extends Component {
                       });
 
               }
-              loading = false
             })
-            
             
         });
         this.setState({usersArray: arr});
       });
-    loading = false;
   }
-  componentDidMount(){
-    
+  componentDidUpdate(snapshot){
+    loading = false
   }
+
   render() {
     if (loading) {
-      return (
-        <ActivityIndicator size={'large'}/>
+      return (<View style={{justifyContent:'center',alignItems:'center',height:windowHeight}}>
+        <Button title='Open Chats' onPress={()=>{
+          loading = false
+          this.forceUpdate()
+        }}/>
+      </View>
       );
     }
     return (
