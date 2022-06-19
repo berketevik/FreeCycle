@@ -28,7 +28,7 @@ export const sendChatMessage = (chatID, chat) => {
 
 const Chat = ({navigation, route}) => {
   const [messages, setMessages] = useState();
-  const {uid, email, chatId} = route.params;
+  const {uid, email, chatId, targetId} = route.params;
   useEffect(() => {
     firestore()
       .collection('messages')
@@ -40,7 +40,10 @@ const Chat = ({navigation, route}) => {
         for (const message in doc.docs) {
           if (Object.hasOwnProperty.call(doc.docs, message)) {
             const element = doc.docs[message];
-            tempArr.push({...element.data(),createdAt:element.data().createdAt.toDate()});
+            tempArr.push({
+              ...element.data(),
+              createdAt: element.data().createdAt.toDate(),
+            });
           }
         }
         setMessages(tempArr);
@@ -51,25 +54,44 @@ const Chat = ({navigation, route}) => {
     setMessages(previousMessages => GiftedChat.append(previousMessages, msg));
     const {_id, createdAt, text, user} = msg[0];
     sendChatMessage(chatId, {_id, createdAt, text, user});
+    firestore()
+      .collection('Users')
+      .doc(uid)
+      .get()
+      .then(documentSnapshot => {
+        const name = documentSnapshot.data().Name;
+
+        firestore()
+          .collection('Users')
+          .doc(targetId)
+          .collection('notifications')
+          .add({
+            notification:
+              "Kullanıcı '" + name + "' size yeni bir mesaj gönderdi. ",
+            createdAt: firestore.Timestamp.now(),
+            seen: false,
+          });
+      });
   }, []);
 
   if (loading) {
     return <ActivityIndicator size={'large'} />;
+  } else {
+    return (
+      <>
+        <GiftedChat
+          messages={messages}
+          showAvatarForEveryMessage={true}
+          onSend={msg => onSend(msg)}
+          user={{
+            _id: uid,
+            name: email,
+            // avatar: auth?.currentUser?.photoURL,
+          }}
+        />
+      </>
+    );
   }
-  else {return (
-    <>
-      <GiftedChat
-        messages={messages}
-        showAvatarForEveryMessage={true}
-        onSend={msg => onSend(msg)}
-        user={{
-          _id: uid,
-          name: email,
-          // avatar: auth?.currentUser?.photoURL,
-        }}
-      />
-    </>
-  );}
 };
 
 export default Chat;

@@ -97,6 +97,7 @@ export default class ChatPage extends Component {
                     uid: this.props.user.uid,
                     email: this.props.user.email,
                     chatId: chatId,
+                    targetId: item.id,
                   });
                 }}
               />

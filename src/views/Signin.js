@@ -215,6 +215,18 @@ export default class Signin extends Component {
                                   Name: name,
                                   email: email,
                                 });
+
+                              firestore()
+                                .collection('Users')
+                                .doc(credential.user.uid)
+                                .collection('notifications')
+                                .add({
+                                  notification:
+                                    "Merhaba FreeCycle a hoşgeldin. ",
+                                  createdAt:
+                                  firestore.Timestamp.now(),
+                                  seen: false,
+                                });
                             }
                           })
                           .catch(error => {

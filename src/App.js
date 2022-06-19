@@ -4,7 +4,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import type {Node} from 'react';
-import Realm from 'realm';
 import auth from '@react-native-firebase/auth';
 import '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore';
@@ -15,7 +14,6 @@ import Navigator from './Navigator';
 
 import {Component} from 'react/cjs/react.production.min';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 
 import Login from './views/Login';
 import Signin from './views/Signin';
@@ -30,14 +28,26 @@ import Chat from './views/Chat';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import MyProducts from './views/MyProducts';
 import Verify from './views/Verify';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+const storeData = async value => {
+  try {
+    await AsyncStorage.setItem('@numberOfNotifications', value).then(
+      console.log('async storage data store succesful with value of ' + value),
+    );
+  } catch (e) {
+    // saving error
+  }
+};
 
 export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(false);
   const [user, setUser] = useState(false);
+  const [notification, setNotification] = useState();
 
   // Handle user state changes
   function onAuthStateChanged(user) {
@@ -47,8 +57,26 @@ export default function App() {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    fire();
     return subscriber; // unsubscribe on unmount
-  }, []);
+  }, [notification]);
+
+  var temp = 0;
+  const fire = () =>
+    firestore()
+      .collection('Users')
+      .doc(user.uid)
+      .collection('notifications')
+      .get()
+      .then(querrySnapshot => {
+        querrySnapshot.forEach(documentSnapshot => {
+          if (!documentSnapshot.data().seen) {
+            temp += 1;
+          }
+        });
+        setNotification(temp);
+        storeData(temp.toString());
+      });
 
   if (initializing) return null;
 
@@ -74,8 +102,12 @@ export default function App() {
           name="Navigator">
           {props => <Navigator {...props} user={user} />}
         </Tab.Screen>
+
         <Tab.Screen name="Menu" tabBar>
           {props => <Menu {...props} user={user} />}
+        </Tab.Screen>
+        <Tab.Screen name={'Notifications ' + notification} tabBar>
+          {props => <NotificationsPage {...props} user={user} />}
         </Tab.Screen>
         <Tab.Screen name="Donate">
           {props => <Donate {...props} user={user} />}

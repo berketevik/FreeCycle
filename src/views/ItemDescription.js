@@ -14,7 +14,6 @@ const windowHeight = Dimensions.get('window').height;
 
 const Logo = require('../../assets/Logo.png');
 var loading = true;
-var isStudent = true;
 
 function chatID(targetID, userId) {
   const chatterID = userId;
@@ -31,11 +30,18 @@ export default class ItemDescription extends Component {
     super(props);
     this.state = {
       categoriesArray: [],
-      userId: 'dene',
+      userId: '',
+      showButton:false
     };
     this.setState({userId: this.props.route.params.userId});
   }
   componentDidMount() {
+    firestore().collection('Users').doc(this.props.route.params.userId).get().then(documentSnapshot => {
+      if(documentSnapshot.data().isStudent !== undefined){
+        console.log(documentSnapshot.data().isStudent)
+        this.setState({showButton:true})
+      }
+    })
     this.category = firestore()
       .collection(this.props.route.params.selectedCollection)
       .doc(this.props.route.params.selectedItem)
@@ -88,7 +94,7 @@ export default class ItemDescription extends Component {
         />)}
         <Text>{item.Name}</Text>
         <Text>{item.Information}</Text>
-        {this.props.route.params.userId !== undefined ? (
+        {this.props.route.params.userId !== undefined && this.state.showButton ? (
           <Button
             title="Urun Sahibiyle Iletisim Kur"
             onPress={() => {
@@ -104,7 +110,7 @@ export default class ItemDescription extends Component {
             }}
           />
         ) : (
-          <></>
+          <Text>To demand that item, first you need to go to your profile page and verify that you are a student.</Text>
         )}
       </View>
     );
