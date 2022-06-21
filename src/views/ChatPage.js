@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {ActivityIndicator, Button, Dimensions} from 'react-native';
+import {ActivityIndicator, Button, Dimensions, StyleSheet} from 'react-native';
 import {View, Text} from 'react-native';
 import {Component} from 'react/cjs/react.production.min';
 import firestore from '@react-native-firebase/firestore';
@@ -31,46 +31,48 @@ export default class ChatPage extends Component {
     this.state = {usersArray: []};
   }
 
-  componentDidMount(){
-
+  componentDidMount() {
     this.category = firestore()
       .collection('Users')
       .onSnapshot(querySnapshot => {
         const arr = [];
-
         querySnapshot.forEach(documentSnapshot => {
           var x = chatID(documentSnapshot.id, this.props.user.uid);
 
           firestore()
             .collection('messages')
             .doc(x)
-            .collection('chats').get().then(function(querySnapshot){
-              if(!querySnapshot.empty){
-
+            .collection('chats')
+            .get()
+            .then(function (querySnapshot) {
+              if (!querySnapshot.empty) {
+                console.log('pushed');
                 arr.push({
-                        ...documentSnapshot.data(),
-                        id: documentSnapshot.id,
-                      });
-
+                  ...documentSnapshot.data(),
+                  id: documentSnapshot.id,
+                });
               }
-            })
-            
+            });
+          this.setState({usersArray: arr});
         });
-        this.setState({usersArray: arr});
       });
-  }
-  componentDidUpdate(snapshot){
-    loading = false
+    setTimeout(() => {
+      loading = false;
+      this.forceUpdate();
+    }, 1500);
   }
 
   render() {
     if (loading) {
-      return (<View style={{justifyContent:'center',alignItems:'center',height:windowHeight}}>
-        <Button title='Open Chats' onPress={()=>{
-          loading = false
-          this.forceUpdate()
-        }}/>
-      </View>
+      return (
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: windowHeight,
+          }}>
+          <ActivityIndicator size={'large'} />
+        </View>
       );
     }
     return (
@@ -80,6 +82,7 @@ export default class ChatPage extends Component {
           alignItems: 'center',
           height: windowHeight,
           backgroundColor: '#F6F0E7',
+          paddingTop: windowHeight * 0.02,
         }}>
         <FlatList
           contentContainerStyle={{
@@ -89,8 +92,50 @@ export default class ChatPage extends Component {
           data={this.state.usersArray}
           renderItem={({item}) => (
             <View>
-              <Button
-                title={item.Name}
+              <Text
+                onPress={() => {
+                  const chatId = chatID(item.id, this.props.user.uid);
+
+                  firestore()
+                    .collection('messages')
+                    .doc(chatId)
+                    .collection('chats')
+                    .get()
+                    .then(querrySnapshot => {
+                      querrySnapshot.forEach(documentSnapshot => {
+                        const docId = documentSnapshot.id;
+                        firestore()
+                          .collection('messages')
+                          .doc(chatId)
+                          .collection('chats')
+                          .doc(docId)
+                          .delete();
+                      });
+                    });
+
+                  firestore()
+                    .collection('messages')
+                    .doc(chatId)
+                    .delete()
+                    .then(() => {
+                      console.log('item deleted');
+                    });
+                }}
+                style={{textAlign: 'right', fontWeight: '800', color: 'red'}}>
+                X
+              </Text>
+              <Text
+                style={{
+                  width: windowWidth * 0.6,
+                  height: windowHeight * 0.1,
+                  textAlign: 'center',
+                  backgroundColor: 'white',
+                  borderWidth: 2,
+                  justifyContent: 'center',
+                  marginVertical: 10,
+                  borderRadius: 20,
+                  paddingTop: 5,
+                }}
                 onPress={() => {
                   const chatId = chatID(item.id, this.props.user.uid);
                   this.props.navigation.navigate('Chat', {
@@ -99,8 +144,9 @@ export default class ChatPage extends Component {
                     chatId: chatId,
                     targetId: item.id,
                   });
-                }}
-              />
+                }}>
+                {item.Name}
+              </Text>
             </View>
           )}
         />

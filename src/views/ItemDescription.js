@@ -31,17 +31,11 @@ export default class ItemDescription extends Component {
     this.state = {
       categoriesArray: [],
       userId: '',
-      showButton:false
+      showButton: false,
     };
     this.setState({userId: this.props.route.params.userId});
   }
   componentDidMount() {
-    firestore().collection('Users').doc(this.props.route.params.userId).get().then(documentSnapshot => {
-      if(documentSnapshot.data().isStudent !== undefined){
-        console.log(documentSnapshot.data().isStudent)
-        this.setState({showButton:true})
-      }
-    })
     this.category = firestore()
       .collection(this.props.route.params.selectedCollection)
       .doc(this.props.route.params.selectedItem)
@@ -52,6 +46,24 @@ export default class ItemDescription extends Component {
             key: documentSnapshot.id,
           },
         });
+
+        firestore()
+          .collection('Users')
+          .doc(this.props.route.params.userId)
+          .get()
+          .then(documentSnapshot2 => {
+            if (
+              documentSnapshot2.data().isStudent !== undefined &&
+              this.props.route.params.userId !== documentSnapshot.data().OwnerID
+            ) {
+              this.setState({showButton: true});
+            } else if (
+              this.props.route.params.userId === documentSnapshot.data().OwnerID
+            ) {
+              this.setState({isMyItem: true});
+            }
+          });
+
         const func = async () => {
           const ref = storage().ref(this.state.categoriesArray.img);
           await ref.getDownloadURL().then(x => {
@@ -59,10 +71,21 @@ export default class ItemDescription extends Component {
           });
         };
 
-          func();
-        
+        func();
       });
     loading = false;
+  }
+  buttonHandler() {
+    if (this.state.isMyItem) {
+      return <Text style={{color:'brown'}}>This item belong to yours.</Text>;
+    } else {
+      return (
+        <Text style={{color:'brown',textAlign:'center'}}>
+          To demand that item, first you need to go to your profile page and
+          verify that you are a student.
+        </Text>
+      );
+    }
   }
 
   render() {
@@ -86,15 +109,17 @@ export default class ItemDescription extends Component {
         {this.state.url === '' ? (
           <Image source={Logo} />
         ) : (
-        <Image
-          style={{width: '70%', height: '70%'}}
-          source={{
-            uri: this.state.url,
-          }}
-        />)}
+          <Image
+            style={{width: '70%', height: '70%'}}
+            source={{
+              uri: this.state.url,
+            }}
+          />
+        )}
         <Text>{item.Name}</Text>
         <Text>{item.Information}</Text>
-        {this.props.route.params.userId !== undefined && this.state.showButton ? (
+        {this.props.route.params.userId !== undefined &&
+        this.state.showButton ? (
           <Button
             title="Urun Sahibiyle Iletisim Kur"
             onPress={() => {
@@ -109,9 +134,8 @@ export default class ItemDescription extends Component {
               });
             }}
           />
-        ) : (
-          <Text>To demand that item, first you need to go to your profile page and verify that you are a student.</Text>
-        )}
+        ) : this.buttonHandler()
+        }
       </View>
     );
   }

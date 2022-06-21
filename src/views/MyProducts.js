@@ -20,7 +20,7 @@ export default class MyProducts extends Component {
   }
 
   componentDidMount() {
-    this.mounted = true
+    this.mounted = true;
     this.category2 = firestore()
       .collection('Categories')
       .onSnapshot(querySnapshot => {
@@ -53,8 +53,8 @@ export default class MyProducts extends Component {
       });
     loading = false;
   }
-  componentWillUnmount(){
-    this.mounted = false
+  componentWillUnmount() {
+    this.mounted = false;
   }
   handleImage(item) {
     for (let i = 0; i < this.state.urlArray.length; i++) {
@@ -94,12 +94,13 @@ export default class MyProducts extends Component {
           numColumns={2}
           data={this.state.categoriesArray}
           renderItem={({item}) => (
-            <View >
+            <View>
               <TouchableHighlight
                 onPress={() => {
                   this.props.navigation.navigate('ItemDescription', {
                     selectedItem: item.key,
                     selectedCollection: item.selectedCategory,
+                    userId: this.props.route.params.userId,
                   });
                 }}>
                 <View
@@ -132,12 +133,18 @@ export default class MyProducts extends Component {
                   </Text>
                 </View>
               </TouchableHighlight>
-                <Text onPress={()=>{
-                  firestore().collection(item.selectedCategory).doc(item.key).delete().then(()=>console.log('item deleted'));
+              <Text
+                onPress={() => {
+                  firestore()
+                    .collection(item.selectedCategory)
+                    .doc(item.key)
+                    .delete()
+                    .then(() => console.log('item deleted'));
                   this.props.navigation.navigate('Tab');
-                }} style={{alignSelf: 'flex-end', color: 'red'}}>
-                  Delete
-                </Text>
+                }}
+                style={{alignSelf: 'flex-end', color: 'red'}}>
+                Delete
+              </Text>
             </View>
           )}
         />

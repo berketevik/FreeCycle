@@ -93,7 +93,10 @@ export default class Profile extends Component {
               onPress={() => {
                 auth()
                   .signOut()
-                  .then(() => console.log('User signed out!'));
+                  .then(() => console.log('User signed out!'))
+                  .catch(error => {
+                    console.log(error, 'error');
+                  });
               }}>
               Sign Out
             </Text>

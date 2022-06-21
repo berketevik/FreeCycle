@@ -95,13 +95,13 @@ export default function App() {
   function Tabs() {
     return (
       <Tab.Navigator screenOptions={{headerShown: false}}>
-        <Tab.Screen
+        {/* <Tab.Screen
           options={{
             tabBarLabel: 'Home',
           }}
           name="Navigator">
           {props => <Navigator {...props} user={user} />}
-        </Tab.Screen>
+        </Tab.Screen> */}
 
         <Tab.Screen name="Menu" tabBar>
           {props => <Menu {...props} user={user} />}
