@@ -106,7 +106,7 @@ export default function App() {
         <Tab.Screen name="Menu" tabBar>
           {props => <Menu {...props} user={user} />}
         </Tab.Screen>
-        <Tab.Screen name={'Notifications ' + notification} tabBar>
+        <Tab.Screen name={'Notifications'} tabBar>
           {props => <NotificationsPage {...props} user={user} />}
         </Tab.Screen>
         <Tab.Screen name="Donate">
