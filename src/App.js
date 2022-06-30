@@ -29,6 +29,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import MyProducts from './views/MyProducts';
 import Verify from './views/Verify';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Image, LogBox} from 'react-native';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -94,28 +95,105 @@ export default function App() {
   }
   function Tabs() {
     return (
-      <Tab.Navigator screenOptions={{headerShown: false}}>
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveBackgroundColor: '#F6F0E7',
+          tabBarInactiveBackgroundColor: '#F6F0E7',
+        }}>
         {/* <Tab.Screen
           options={{
             tabBarLabel: 'Home',
-          }}
+          }} 
           name="Navigator">
           {props => <Navigator {...props} user={user} />}
         </Tab.Screen> */}
-
-        <Tab.Screen name="Menu" tabBar>
+        {LogBox.ignoreAllLogs()}
+        <Tab.Screen
+          options={{
+            tabBarLabel: 'Home',
+            tabBarIcon: ({color, size}) => (
+              <Image
+                source={require('../assets/menu.png')}
+                style={{
+                  justifyContent: 'flex-start',
+                  width: size,
+                  height: size,
+                }}
+              />
+            ),
+          }}
+          name="Menu"
+          tabBar>
           {props => <Menu {...props} user={user} />}
         </Tab.Screen>
-        <Tab.Screen name={'Notifications'} tabBar>
+        <Tab.Screen
+          options={{
+            tabBarLabel: 'Notifications',
+            tabBarIcon: ({color, size}) => (
+              <Image
+                source={require('../assets/notification.png')}
+                style={{
+                  justifyContent: 'flex-start',
+                  width: size,
+                  height: size,
+                }}
+              />
+            ),
+          }}
+          name={'Notifications'}
+          tabBar>
           {props => <NotificationsPage {...props} user={user} />}
         </Tab.Screen>
-        <Tab.Screen name="Donate">
+        <Tab.Screen
+          options={{
+            tabBarLabel: 'Donate',
+            tabBarIcon: ({color, size}) => (
+              <Image
+                source={require('../assets/photo-camera-interface-symbol-for-button.png')}
+                style={{
+                  justifyContent: 'flex-start',
+                  width: size,
+                  height: size,
+                }}
+              />
+            ),
+          }}
+          name="Donate">
           {props => <Donate {...props} user={user} />}
         </Tab.Screen>
-        <Tab.Screen name="ChatPage">
+        <Tab.Screen
+          options={{
+            tabBarLabel: 'Chat',
+            tabBarIcon: ({color, size}) => (
+              <Image
+                source={require('../assets/chat.png')}
+                style={{
+                  justifyContent: 'flex-start',
+                  width: size,
+                  height: size,
+                }}
+              />
+            ),
+          }}
+          name="ChatPage">
           {props => <ChatPage {...props} user={user} />}
         </Tab.Screen>
-        <Tab.Screen name="Profile">
+        <Tab.Screen
+          options={{
+            tabBarLabel: 'Profile',
+            tabBarIcon: ({color, size}) => (
+              <Image
+                source={require('../assets/profile.png')}
+                style={{
+                  justifyContent: 'flex-start',
+                  width: size,
+                  height: size,
+                }}
+              />
+            ),
+          }}
+          name="Profile">
           {props => <Profile {...props} user={user} />}
         </Tab.Screen>
       </Tab.Navigator>
