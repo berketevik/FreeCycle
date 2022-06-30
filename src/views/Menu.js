@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {Dimensions} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {View, Text,Image} from 'react-native';
 import {Component} from 'react/cjs/react.production.min';
 import firestore from '@react-native-firebase/firestore';
@@ -54,25 +54,14 @@ export default class Menu extends Component {
           <Image
               source={require('../../assets/Logo.png')}
               style={{
-                width: (windowHeight * 6) / 100,
-                height: (windowHeight * 6) / 100,
+                marginTop:windowHeight*0.02,
+                width: (windowHeight * 12) / 100,
+                height: (windowHeight * 12) / 100,
                 marginHorizontal: 3,
                 justifyContent:"flex-start",
-                alignSelf:""
               }}
             />
-            <Image
-              source={require('../../assets/Line1.png')}
-              resizeMode="contain"
-              style={{
-                width: windowWidth,
-                height: (windowHeight * 6) / 100,
-                marginHorizontal: 3,
-                justifyContent:"flex-start",
-                alignSelf:"",
-                
-              }}
-            />
+            <Text style={{borderWidth:7,width:windowWidth,borderBottomWidth:0,borderRightWidth:0,borderLeftWidth:0,marginTop:windowHeight*0.02,borderColor:'#314951'}}/>
         <FlatList
           contentContainerStyle={{
             justifyContent: 'center',
@@ -100,6 +89,8 @@ export default class Menu extends Component {
               onPress={() => {
                 this.props.navigation.navigate('Category', {
                   selectedCategory: item.key,
+                  userId:this.props.user.uid,
+                  userEmail:this.props.user.email,
                 });
               }}
               style={{

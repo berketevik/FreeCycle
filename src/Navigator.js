@@ -7,7 +7,6 @@ import {
   View,
   Text,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
 
 export default class Navigator extends Component {
   state = {
@@ -47,12 +46,24 @@ export default class Navigator extends Component {
         path: 'Donate',
       },
       {
-        sayfa: 'Chat',
-        path: 'Chat',
+        sayfa: 'ChatPage',
+        path: 'ChatPage',
       },
       {
         sayfa: 'Profile',
         path: 'Profile',
+      },
+      {
+        sayfa: 'My Products',
+        path: 'MyProducts',
+      },
+      {
+        sayfa: 'Verify',
+        path: 'Verify',
+      },
+      {
+        sayfa: 'Notifications',
+        path: 'Notifications',
       },
     ],
   };
@@ -90,14 +101,7 @@ export default class Navigator extends Component {
                   <Text style={{textAlign: 'center'}}>{sayfa.sayfa}</Text>
                 </TouchableOpacity>
               ))}
-            <Text
-              onPress={() => {
-                auth()
-                  .signOut()
-                  .then(() => console.log('User signed out!'));
-              }}>
-              Sign Out
-            </Text>
+            
           </View>
         </ScrollView>
       </View>
