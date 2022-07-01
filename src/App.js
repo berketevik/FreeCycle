@@ -10,10 +10,7 @@ import firestore from '@react-native-firebase/firestore';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import SplashScreen from './views/SplashScreen';
-import Navigator from './Navigator';
-
-import {Component} from 'react/cjs/react.production.min';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Navigator from './Navigator'
 
 import Login from './views/Login';
 import Signin from './views/Signin';
@@ -25,8 +22,8 @@ import Donate from './views/Donate';
 import ChatPage from './views/ChatPage';
 import Profile from './views/Profile';
 import Chat from './views/Chat';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import MyProducts from './views/MyProducts';
+import LoginSelect from './views/LoginSelect';
 import Verify from './views/Verify';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Image, LogBox} from 'react-native';
@@ -58,26 +55,39 @@ export default function App() {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    fire();
+    fire(); //Get the unseen messages count and put it into local storage
     return subscriber; // unsubscribe on unmount
   }, [notification]);
 
+  //Get the unseen messages count and put it into local storage
   var temp = 0;
-  const fire = () =>
-    firestore()
-      .collection('Users')
-      .doc(user.uid)
-      .collection('notifications')
-      .get()
-      .then(querrySnapshot => {
-        querrySnapshot.forEach(documentSnapshot => {
-          if (!documentSnapshot.data().seen) {
-            temp += 1;
+  const fire = () =>{
+    try {
+      firestore()
+        .collection('Users')
+        .doc(user.uid)
+        .collection('notifications')
+        .get()
+        .then(querrySnapshotAppPage => {
+          try {
+            querrySnapshotAppPage.forEach(documentSnapshot => {
+              if (!documentSnapshot.data().seen) {
+                temp += 1;
+              }
+            });
+            setNotification(temp);
+            storeData(temp.toString());
+          } catch (error) {
+            console.log(error);
           }
         });
-        setNotification(temp);
-        storeData(temp.toString());
-      });
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
+    
 
   if (initializing) return null;
 
@@ -85,9 +95,10 @@ export default function App() {
     return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Navigator" component={Navigator} />
-          <Stack.Screen name="Splash" component={Signin} />
-          <Stack.Screen name="Signin" component={SplashScreen} />
+          {/* <Stack.Screen name="Navigator" component={Navigator} /> */}
+          <Stack.Screen name="Splash" component={SplashScreen} />
+          <Stack.Screen name="LoginSelect" component={LoginSelect} />
+          <Stack.Screen name="Signin" component={Signin} />
           <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
       </NavigationContainer>
@@ -101,13 +112,6 @@ export default function App() {
           tabBarActiveBackgroundColor: '#F6F0E7',
           tabBarInactiveBackgroundColor: '#F6F0E7',
         }}>
-        {/* <Tab.Screen
-          options={{
-            tabBarLabel: 'Home',
-          }} 
-          name="Navigator">
-          {props => <Navigator {...props} user={user} />}
-        </Tab.Screen> */}
         {LogBox.ignoreAllLogs()}
         <Tab.Screen
           options={{

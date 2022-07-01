@@ -37,17 +37,23 @@ const Chat = ({navigation, route}) => {
       .orderBy('createdAt', 'desc')
       .onSnapshot(function (doc) {
         var tempArr = [];
-        for (const message in doc.docs) {
-          if (Object.hasOwnProperty.call(doc.docs, message)) {
-            const element = doc.docs[message];
-            tempArr.push({
-              ...element.data(),
-              createdAt: element.data().createdAt.toDate(),
-            });
+        try {
+          for (const message in doc.docs) {
+            if (Object.hasOwnProperty.call(doc.docs, message)) {
+              const element = doc.docs[message];
+              tempArr.push({
+                ...element.data(),
+                createdAt: element.data().createdAt.toDate(),
+              });
+            }
           }
+          setMessages(tempArr);
+          loading = false;
+          
+        } catch (error) {
+         console.log(error) 
         }
-        setMessages(tempArr);
-        loading = false;
+        
       });
   }, []);
   const onSend = useCallback((msg = []) => {

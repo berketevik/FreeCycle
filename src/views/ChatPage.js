@@ -36,25 +36,31 @@ export default class ChatPage extends Component {
       .collection('Users')
       .onSnapshot(querySnapshot => {
         const arr = [];
-        querySnapshot.forEach(documentSnapshot => {
-          var x = chatID(documentSnapshot.id, this.props.user.uid);
 
-          firestore()
-            .collection('messages')
-            .doc(x)
-            .collection('chats')
-            .get()
-            .then(function (querySnapshot) {
-              if (!querySnapshot.empty) {
-                console.log('pushed');
-                arr.push({
-                  ...documentSnapshot.data(),
-                  id: documentSnapshot.id,
-                });
-              }
-            });
-          this.setState({usersArray: arr});
-        });
+        try {
+          querySnapshot.forEach(documentSnapshot => {
+            var x = chatID(documentSnapshot.id, this.props.user.uid);
+  
+            firestore()
+              .collection('messages')
+              .doc(x)
+              .collection('chats')
+              .get()
+              .then(function (querySnapshot) {
+                if (!querySnapshot.empty) {
+                  console.log('pushed');
+                  arr.push({
+                    ...documentSnapshot.data(),
+                    id: documentSnapshot.id,
+                  });
+                }
+              });
+            this.setState({usersArray: arr});
+          });
+        } catch (error) {
+          console.log(error)
+        }
+        
       });
     setTimeout(() => {
       loading = false;
@@ -101,16 +107,22 @@ export default class ChatPage extends Component {
                     .doc(chatId)
                     .collection('chats')
                     .get()
-                    .then(querrySnapshot => {
-                      querrySnapshot.forEach(documentSnapshot => {
-                        const docId = documentSnapshot.id;
-                        firestore()
-                          .collection('messages')
-                          .doc(chatId)
-                          .collection('chats')
-                          .doc(docId)
-                          .delete();
-                      });
+                    .then(querrySnapshotChatPage => {
+                      try {
+                        querrySnapshotChatPage.forEach(documentSnapshot => {
+                          const docId = documentSnapshot.id;
+                          firestore()
+                            .collection('messages')
+                            .doc(chatId)
+                            .collection('chats')
+                            .doc(docId)
+                            .delete();
+                        });
+                        
+                      } catch (error) {
+                        console.log(error)
+                      }
+                      
                     });
 
                   firestore()

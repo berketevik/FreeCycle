@@ -20,6 +20,8 @@ export default class Profile extends Component {
     this.category = firestore()
       .collection('Users')
       .onSnapshot(querySnapshot => {
+        try {
+          
         querySnapshot.forEach(documentSnapshot => {
           if (this.props.user.uid === documentSnapshot.id) {
             this.setState({
@@ -27,6 +29,9 @@ export default class Profile extends Component {
             });
           }
         });
+        } catch (error) {
+          console.log(error)
+        }
       });
     loading = false;
   }

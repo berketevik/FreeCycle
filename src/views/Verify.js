@@ -173,7 +173,7 @@ export default class Verify extends Component {
               </View>
               <View style={{width:windowWidth,height:windowHeight*0.04,marginVertical:windowHeight*0.01,flexDirection:"row",textAlign:"center"}}>
                 <Text
-                style={{width:windowWidth*0.30,fontSize:windowHeight*0.015,marginLeft:windowWidth*0.05,backgroundColor:"#D1C8BA",height:windowHeight*0.04,paddingTop:windowHeight*0.01,paddingLeft:windowWidth*0.02}}
+                style={{width:windowWidth,fontSize:20,marginLeft:windowWidth*0.05,backgroundColor:"#D1C8BA",height:64,paddingTop:windowHeight*0.01,paddingLeft:windowWidth*0.02}}
                 >Please send us your photo when you are holding your student ID </Text>
                
               </View>
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   },
   btnParentSection: {
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 50,
   },
   btnSection: {
     width: 225,

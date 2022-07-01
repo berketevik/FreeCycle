@@ -5,7 +5,6 @@ import {View, Text,Image} from 'react-native';
 import {Component} from 'react/cjs/react.production.min';
 import firestore from '@react-native-firebase/firestore';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
-import {SafeAreaView} from 'react-native-safe-area-context';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -21,14 +20,18 @@ export default class Menu extends Component {
       .collection('Categories')
       .onSnapshot(querySnapshot => {
         const arr = [];
-
-        querySnapshot.forEach(documentSnapshot => {
-          arr.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
+        try {
+          querySnapshot.forEach(documentSnapshot => {
+            arr.push({
+              ...documentSnapshot.data(),
+              key: documentSnapshot.id,
+            });
           });
-        });
-        this.setState({categoriesArray: arr});
+          this.setState({categoriesArray: arr});
+        } catch (error) {
+          console.log(error)
+        }
+        
       });
     loading = false;
   }
@@ -42,7 +45,7 @@ export default class Menu extends Component {
       );
     }
     return (
-      <SafeAreaView
+      <View
         style={{
           backgroundColor: 'red',
           height: windowHeight,
@@ -111,7 +114,7 @@ export default class Menu extends Component {
             </View>
           )}
         />
-      </SafeAreaView>
+      </View>
     );
   }
 }

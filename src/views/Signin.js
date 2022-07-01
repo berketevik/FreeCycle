@@ -20,7 +20,7 @@ export default class Signin extends Component {
       <ScrollView
         contentContainerStyle={{height: '100%'}}
         style={{flexGrow: 1, backgroundColor: '#F6F0E7'}}>
-        <View style={{flex: 2, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ justifyContent: 'center', alignItems: 'center'}}>
           <Image
             source={require('../../assets/Logo.png')}
             style={{
@@ -33,13 +33,11 @@ export default class Signin extends Component {
         </View>
         <View
           style={{
-            flex: 5,
             width: '100%',
             justifyContent: 'center',
           }}>
           <View
             style={{
-              flex: 4,
               justifyContent: 'center',
               flexDirection: 'column',
               backgroundColor: '#F6F0E7',
@@ -47,7 +45,7 @@ export default class Signin extends Component {
               borderWidth: 6,
               borderRadius: 100,
               width: '80%',
-              height: '50%',
+              height: 500,
               alignSelf: 'center',
               paddingHorizontal: '2.8%',
               paddingVertical: '1%',

@@ -13,16 +13,19 @@ const windowHeight = Dimensions.get('window').height;
 var email = null;
 var password = null;
 export default class Signin extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {wrongPassword: ''};
+  }
   render() {
     return (
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex:1}}>
+        style={{flex: 1}}>
         <ScrollView
           contentContainerStyle={{height: '100%'}}
           style={{flexGrow: 1, backgroundColor: '#F6F0E7'}}>
-          <View
-            style={{flex: 2, justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <Image
               source={require('../../assets/Logo.png')}
               style={{
@@ -35,13 +38,12 @@ export default class Signin extends Component {
           </View>
           <View
             style={{
-              flex: 5,
+              height: 400,
               width: '100%',
               justifyContent: 'center',
             }}>
             <View
               style={{
-                flex: 4,
                 justifyContent: 'center',
                 flexDirection: 'column',
                 backgroundColor: '#F6F0E7',
@@ -49,7 +51,7 @@ export default class Signin extends Component {
                 borderWidth: 6,
                 borderRadius: 100,
                 width: '80%',
-                height: '50%',
+                height: 400,
                 alignSelf: 'center',
                 paddingHorizontal: '2.8%',
                 paddingVertical: '1%',
@@ -82,21 +84,29 @@ export default class Signin extends Component {
                       justifyContent: 'center',
                       fontSize: windowHeight * 0.03,
                     }}>
-                    SIGN IN
+                    LOG IN
                   </Text>
                 </View>
 
                 <View style={{flex: 2}}>
-                  <View style={{flex: 10, backgroundColor: '#F6F0E7'}}>
+                  <View
+                    style={{
+                      flex: 10,
+                      backgroundColor: '#F6F0E7',
+                      minHeight: 20,
+                    }}>
                     <View
                       style={{
+                        minHeight: 40,
                         flex: 3,
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}>
                       <TextInput
                         style={{
-                          fontSize: (windowHeight * 2.5) / 100,
+                          minHeight: 20,
+
+                          fontSize: 18,
                           justifyContent: 'center',
                           alignItems: 'center',
                         }}
@@ -116,6 +126,7 @@ export default class Signin extends Component {
 
                     <View
                       style={{
+                        minHeight: 40,
                         flex: 3,
                         backgroundColor: '#F6F0E7',
                         alignItems: 'center',
@@ -123,7 +134,9 @@ export default class Signin extends Component {
                       }}>
                       <TextInput
                         style={{
-                          fontSize: (windowHeight * 2.5) / 100,
+                          minHeight: 20,
+
+                          fontSize: 18,
                         }}
                         placeholder="Password"
                         secureTextEntry
@@ -157,25 +170,31 @@ export default class Signin extends Component {
                             })
                             .catch(error => {
                               if (error.code === 'auth/email-already-in-use') {
-                                console.log(
-                                  'That email address is already in use!',
-                                );
+                                this.setState({wrongPassword:'That email address is already in use!'})
                               }
 
                               if (error.code === 'auth/invalid-email') {
-                                console.log('That email address is invalid!');
+                                this.setState({wrongPassword:'That email address is invalid!'})
                               }
 
-                              console.error(error);
+                              console.log(error);
                             });
                         }
                       }}
                     />
+                    <Text
+                      style={{
+                        color: 'red',
+                        alignSelf: 'center',
+                        textAlign: 'center',
+                        fontSize: 20,
+                      }}>
+                      {this.state.wrongPassword}
+                    </Text>
                   </View>
                 </View>
               </View>
             </View>
-            <View style={{flex: 1}}></View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

@@ -6,7 +6,6 @@ import {Component} from 'react/cjs/react.production.min';
 import firestore from '@react-native-firebase/firestore';
 import {FlatList} from 'react-native-gesture-handler';
 import storage from '@react-native-firebase/storage';
-import {SafeAreaView} from 'react-native-safe-area-context';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -23,22 +22,25 @@ export default class Category extends Component {
       .collection(this.props.route.params.selectedCategory)
       .onSnapshot(querySnapshot => {
         const arr = [];
-
-        querySnapshot.forEach(documentSnapshot => {
-          arr.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
-          const func = async () => {
-            const ref = storage().ref(documentSnapshot.data().img);
-            await ref.getDownloadURL().then(x => {
-              var joined = this.state.urlArray.concat([x]);
-              this.setState({urlArray: joined});
+        try {
+          querySnapshot.forEach(documentSnapshot => {
+            arr.push({
+              ...documentSnapshot.data(),
+              key: documentSnapshot.id,
             });
-          };
-          func();
-        });
-        this.setState({categoriesArray: arr});
+            const func = async () => {
+              const ref = storage().ref(documentSnapshot.data().img);
+              await ref.getDownloadURL().then(x => {
+                var joined = this.state.urlArray.concat([x]);
+                this.setState({urlArray: joined});
+              });
+            };
+            func();
+          });
+          this.setState({categoriesArray: arr});
+        } catch (error) {
+          console.log(error);
+        }
       });
     loading = false;
   }
@@ -46,7 +48,7 @@ export default class Category extends Component {
   handleImage(item) {
     for (let i = 0; i < this.state.urlArray.length; i++) {
       if (this.state.urlArray[i].includes(item.substr(5))) {
-        console.log(this.state.urlArray[i])
+        console.log(this.state.urlArray[i]);
         return this.state.urlArray[i];
       }
     }
@@ -61,7 +63,7 @@ export default class Category extends Component {
       );
     }
     return (
-      <SafeAreaView
+      <View
         style={{
           justifyContent: 'center',
           alignItems: 'center',
@@ -98,8 +100,7 @@ export default class Category extends Component {
                   paddingTop: windowHeight * 0.02,
                   paddingLeft: windowWidth * 0.03,
                 }}>
-
-                {item.img ===undefined ? (
+                {item.img === undefined ? (
                   <Image source={Logo} />
                 ) : (
                   <Image
@@ -126,7 +127,7 @@ export default class Category extends Component {
             </TouchableHighlight>
           )}
         />
-      </SafeAreaView>
+      </View>
     );
   }
 }

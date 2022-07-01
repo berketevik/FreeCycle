@@ -22,22 +22,27 @@ export default class NotificationsPage extends Component {
       .doc(this.props.user.uid)
       .collection('notifications').orderBy('createdAt','desc')
       .get()
-      .then(querrySnapshot => {
-        querrySnapshot.forEach(documentSnapshot => {
-          tempArray.push({...documentSnapshot.data(), id: documentSnapshot.id});
-          if (!documentSnapshot.data().seen) {
-            temp += 1;
-            firestore()
-              .collection('Users')
-              .doc(this.props.user.uid)
-              .collection('notifications')
-              .doc(documentSnapshot.id)
-              .update({seen: true})
-              .then(console.log('updated'));
-          }
-        });
-        this.setState({unreadMessage: temp});
-        this.setState({categoriesArray: tempArray});
+      .then(querrySnapshotNotiPage => {
+        try {
+          querrySnapshotNotiPage.forEach(documentSnapshot => {
+            tempArray.push({...documentSnapshot.data(), id: documentSnapshot.id});
+            if (!documentSnapshot.data().seen) {
+              temp += 1;
+              firestore()
+                .collection('Users')
+                .doc(this.props.user.uid)
+                .collection('notifications')
+                .doc(documentSnapshot.id)
+                .update({seen: true})
+                .then(console.log('updated'));
+            }
+          });
+          this.setState({unreadMessage: temp});
+          this.setState({categoriesArray: tempArray});
+        } catch (error) {
+          console.log(error)
+        }
+        
       });
     loading = false;
   }

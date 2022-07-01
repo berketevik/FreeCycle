@@ -55,10 +55,14 @@ export default class Donate extends Component {
       .onSnapshot(querySnapshot => {
         const arr = [];
 
-        querySnapshot.forEach(documentSnapshot => {
-          arr.push(documentSnapshot.id);
-        });
-        this.setState({categoriesArray: arr});
+        try {
+          querySnapshot.forEach(documentSnapshot => {
+            arr.push(documentSnapshot.id);
+          });
+          this.setState({categoriesArray: arr});
+        } catch (error) {
+          console.log(error)
+        }
       });
   }
 
